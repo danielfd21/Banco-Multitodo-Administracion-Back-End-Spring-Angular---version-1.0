@@ -7,6 +7,7 @@ package com.app.bancomultitodogerenciaservice.Controlador;
 import com.app.bancomultitodogerenciaservice.Modelo.DepartamentoModel;
 import com.app.bancomultitodogerenciaservice.Modelo.EmpleadoModel;
 import com.app.bancomultitodogerenciaservice.Modelo.EmpleadoRegistroModel;
+import com.app.bancomultitodogerenciaservice.Security.jwtUtil;
 import com.app.bancomultitodogerenciaservice.Servicio.EmpleadoService;
 import java.util.List;
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +40,11 @@ public class GerenciaController {
     
     @Autowired
     EmpleadoService ser_emp;
+    
+    @Autowired
+    jwtUtil jwtutil;
+    
+    
     
     @PostMapping("/registrar-empleado")
     public ResponseEntity<String> PostRegistroEmpleado(@RequestBody EmpleadoRegistroModel empleado){
@@ -203,6 +210,35 @@ public class GerenciaController {
             return lista_departamentos;
         
         }
+        
+        
+       
+      @GetMapping("/proteccion-certificado")
+      public ResponseEntity<String> Verificarcertificado(@RequestHeader("Authorizacion") String Header_autentificacion){
+          
+          if(Header_autentificacion != null  && Header_autentificacion.startsWith("Bearer ")){
+              
+              
+              String token_modificado = Header_autentificacion.substring(7);
+              
+              if(jwtutil.ValidarToken(token_modificado)){
+                  
+                 return ResponseEntity.status(HttpStatus.OK).body("acceso correcto");
+                  
+              }else{
+                  
+                  return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("token expirado");
+              }
+              
+              
+          }else{
+              
+              return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token vacio o incorrecto");
+          }
+          
+          
+         
+      } 
     
         
     

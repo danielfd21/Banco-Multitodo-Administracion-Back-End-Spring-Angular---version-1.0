@@ -8,6 +8,7 @@ import com.app.bancomultitodoautentificacionservice.Modelo.DepartamentoModel;
 import com.app.bancomultitodoautentificacionservice.Modelo.EmpleadosModel;
 import com.app.bancomultitodoautentificacionservice.Repositorio.CuentaWebRepository;
 import com.app.bancomultitodoautentificacionservice.Repositorio.DepartamentoRepository;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,6 +72,7 @@ public class AutentificacionService {
     }
     
     
+    @Transactional
     public String getdepartamento(int Id_departamento, String cedula){
         
         String departamento = "";
@@ -94,9 +96,8 @@ public class AutentificacionService {
     }
     
     
-   
     
- 
+
     
     
     

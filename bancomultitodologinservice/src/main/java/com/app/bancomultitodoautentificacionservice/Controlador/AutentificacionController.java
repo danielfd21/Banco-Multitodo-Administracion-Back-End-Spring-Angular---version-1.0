@@ -4,8 +4,10 @@
  */
 package com.app.bancomultitodoautentificacionservice.Controlador;
 
+import com.app.bancomultitodoautentificacionservice.Modelo.CuentaWebResponseModel;
 import com.app.bancomultitodoautentificacionservice.Modelo.DepartamentoModel;
 import com.app.bancomultitodoautentificacionservice.Modelo.EmpleadosModel;
+import com.app.bancomultitodoautentificacionservice.Security.JwtUtil;
 import com.app.bancomultitodoautentificacionservice.Servicios.AutentificacionService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +33,15 @@ public class AutentificacionController {
     
     @Autowired
     AutentificacionService autentificacion_service;
-
     
+    @Autowired
+    JwtUtil jwutil;
+
+  
     
     
     @PostMapping("")
-    public ResponseEntity<String> PostLoguear(@RequestBody EmpleadosModel empleado){
+    public ResponseEntity<?> PostLoguear(@RequestBody EmpleadosModel empleado){
  
         String usu = empleado.getCedula();
         String cla = empleado.getClave();
@@ -47,16 +52,20 @@ public class AutentificacionController {
             
             if(verificar_credenciales == true){
                 
+                String token = jwutil.GenerarToken(usu);
+                
                 int id = autentificacion_service.GetId_Empleado(usu);
                 
-                String dep = autentificacion_service.getdepartamento(id, usu);
+                String dep = autentificacion_service.getdepartamento(id, usu).trim();
+                
+                CuentaWebResponseModel cuenta = new CuentaWebResponseModel(dep, token);
                 
                 switch (dep) {
                     
-                    case "Contabilidad": return ResponseEntity.status(HttpStatus.OK).body("Contabilidad"); 
-                    case "Gerencia": return ResponseEntity.status(HttpStatus.OK).body("Gerencia"); 
-                    case "Asistencia al cliente":return ResponseEntity.status(HttpStatus.OK).body("Asistencia al cliente");
-                    default:  return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("departamento inexistente");
+                    case "Contabilidad": return ResponseEntity.status(HttpStatus.OK).body(cuenta); 
+                    case "Gerencia": return ResponseEntity.status(HttpStatus.OK).body(cuenta); 
+                    case "Asistencia al cliente":return ResponseEntity.status(HttpStatus.OK).body(cuenta);
+                    default: return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dep);
                         
                        
                 }
