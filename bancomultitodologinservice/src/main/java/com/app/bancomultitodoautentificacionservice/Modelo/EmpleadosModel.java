@@ -7,6 +7,8 @@ package com.app.bancomultitodoautentificacionservice.Modelo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 /**
@@ -20,66 +22,40 @@ public class EmpleadosModel {
        
        @Id
        @Column(name = "cedula")
-       public String cedula;
+       private String cedula;
        
        @Column(name = "nombre")
-       public String nombre;
+       private String nombre;
        
        @Column(name = "apellidos")
-       public String apellidos;
+       private String apellidos;
        
        @Column(name = "correo")
-       public String correo;
+       private String correo;
        
        @Column(name = "fecha_de_nacimiento")
-       public String fecha_de_nacimiento;
+       private String fecha_de_nacimiento;
        
        @Column(name = "clave")
-       public String clave;
+       private String clave;
        
-       @Column(name = "Id_departamento")
-       public int idDepartamento;
+       @ManyToOne
+       @JoinColumn(name = "Id_departamento")
+       public DepartamentoModel departamento;
 
-    public EmpleadosModel(String cedula, String nombre, String apellidos, String correo, String fecha_de_nacimiento, String clave, int idDepartamento) {
+       
+    public EmpleadosModel(){
+        
+    }   
+       
+    public EmpleadosModel(String cedula, String nombre, String apellidos, String correo, String fecha_de_nacimiento, String clave, DepartamentoModel departamento) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.correo = correo;
         this.fecha_de_nacimiento = fecha_de_nacimiento;
         this.clave = clave;
-        this.idDepartamento = idDepartamento;
-    }
-    
-    public EmpleadosModel(){
-        
-    }
-
-    public String getCedula() {
-        return cedula;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public String getFecha_de_nacimiento() {
-        return fecha_de_nacimiento;
-    }
-
-    public String getClave() {
-        return clave;
-    }
-
-    public int getIdDepartamento() {
-        return idDepartamento;
+        this.departamento = departamento;
     }
 
     public void setCedula(String cedula) {
@@ -106,11 +82,38 @@ public class EmpleadosModel {
         this.clave = clave;
     }
 
-    public void setIdDepartamento(int idDepartamento) {
-        this.idDepartamento = idDepartamento;
+    public void setDepartamento(DepartamentoModel departamento) {
+        this.departamento = departamento;
     }
 
-    
+    public String getCedula() {
+        return cedula;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public String getFecha_de_nacimiento() {
+        return fecha_de_nacimiento;
+    }
+
+    public String getClave() {
+        return clave;
+    }
+
+    public DepartamentoModel getDepartamento() {
+        return departamento;
+    }
+       
        
        
        

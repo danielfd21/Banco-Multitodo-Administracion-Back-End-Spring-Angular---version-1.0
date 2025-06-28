@@ -6,6 +6,8 @@ import java.util.Base64;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 import javax.crypto.SecretKey;
+import io.jsonwebtoken.Jwts;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -36,7 +38,7 @@ public class JwtUtil {
     
     public String ExtraerUsuario(String token){
         
-     return Jwts.parser().setSigningKey(Llave_secreta()).parseClaimsJws(token).getBody().getSubject();
+     return Jwts.parserBuilder().setSigningKey(Llave_secreta()).build().parseClaimsJws(token).getBody().getSubject();
         
         
     }
@@ -45,7 +47,7 @@ public class JwtUtil {
     public boolean ValidarToken(String token){
         
        try{
-            Jwts.parser().setSigningKey(Llave_secreta()).parseClaimsJws(token);
+            Jwts.parserBuilder().setSigningKey(Llave_secreta()).build().parseClaimsJws(token);
             return true;
         }catch(Exception e){
             

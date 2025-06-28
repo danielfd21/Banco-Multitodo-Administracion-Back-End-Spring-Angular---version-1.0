@@ -40,32 +40,29 @@ public class AutentificacionController {
   
     
     
-    @PostMapping("")
-    public ResponseEntity<?> PostLoguear(@RequestBody EmpleadosModel empleado){
+    @PostMapping("/login")
+    public ResponseEntity<?> PostLoguear(@RequestParam String usu, @RequestParam String cla){
  
-        String usu = empleado.getCedula();
-        String cla = empleado.getClave();
+        
+        String departamento = "";
         
         if(usu != null && cla != null ){
             
-            boolean verificar_credenciales = autentificacion_service.Verificar_Credenciales(usu, cla);
+           departamento  = autentificacion_service.Verificar_Credenciales(usu, cla);
             
-            if(verificar_credenciales == true){
+            if(!departamento.equals("Credenciales incorrectas")){
                 
                 String token = jwutil.GenerarToken(usu);
                 
-                int id = autentificacion_service.GetId_Empleado(usu);
                 
-                String dep = autentificacion_service.getdepartamento(id, usu).trim();
                 
-                CuentaWebResponseModel cuenta = new CuentaWebResponseModel(dep, token);
+                CuentaWebResponseModel cuenta = new CuentaWebResponseModel(departamento, token);
                 
-                switch (dep) {
+                switch (departamento) {
                     
                     case "Contabilidad": return ResponseEntity.status(HttpStatus.OK).body(cuenta); 
                     case "Gerencia": return ResponseEntity.status(HttpStatus.OK).body(cuenta); 
-                    case "Asistencia al cliente":return ResponseEntity.status(HttpStatus.OK).body(cuenta);
-                    default: return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(dep);
+                    default: return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Por el momento su departamento no cuenta con un area de trabajo, estaremos trabajando en ello proximamente Gracias!");
                         
                        
                 }
@@ -79,7 +76,7 @@ public class AutentificacionController {
                 
             }else{
                 
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Las credenciales son incorrectas");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(departamento);
                 
             }
             

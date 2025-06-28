@@ -16,6 +16,6 @@ import org.springframework.stereotype.Repository;
 public interface  CuentaWebRepository extends JpaRepository<EmpleadosModel, Long>{
     
     EmpleadosModel findByCedulaAndClave(String cedula, String clave);
-    EmpleadosModel findByCedula(String cedula);
+    
     
 }
